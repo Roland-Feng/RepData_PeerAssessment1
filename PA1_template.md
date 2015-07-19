@@ -1,7 +1,4 @@
----
-title: "PA1_template"
-output: html_document
----
+# PA1_template
 by Roland Feng
 
 
@@ -9,42 +6,67 @@ by Roland Feng
 ##Loading and preprocessing the data
 
 First we load the data with read.csv(). Here we save it as dataStep, and we could see its structure:
-```{r}
-dataStep<-read.csv("activity.csv")
+
+```r
+dataStep<-read.csv("./activity.csv")
 str(dataStep)
 ```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
 I use split() to seperate the date.
-```{r}
+
+```r
 dataStep2<-split(dataStep,dataStep$date)
 ```
 
 ##What is mean total number of steps taken per day?
 
 Notice that there are 61 days. So we use a **for** here:
-```{r}
+
+```r
 dataStepDay<-1:61
 for (i in 1:61){
         dataStepDay[i]<-sum(dataStep2[[i]]$steps)
 }
 ```
 Then we plot the histogram
-```{r result="asis"}
+
+```r
 hist(dataStepDay,xlab="Number of Steps",col="red")
 ```
 
-The mean and meidan is calculated by 
-```{r}
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+The mean and meidan is
+
+```r
 dataStepDay<-dataStepDay[!is.na(dataStepDay)]
 mean(dataStepDay)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(dataStepDay)
 ```
-and they are 10766.19 and 10765.
+
+```
+## [1] 10765
+```
 
 ##What is average daily activity pattern?
 
 First, we need to calculate the mean of the steps of dates by intervals. There are 288 intervals
-```{r}
+
+```r
 dataStep3<-split(dataStep,dataStep$interval)
 dataStepInterval<-1:288
 for(i in 1:288){
@@ -55,13 +77,21 @@ for(i in 1:288){
 ```
 
 Then we plot
-```{r}
+
+```r
 Interval<-unique(dataStep$interval)
 plot(Interval,dataStepInterval,type="l")
 ```
 
-```{r}
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+
+```r
 Interval[which.max(dataStepInterval)]
+```
+
+```
+## [1] 835
 ```
 
 The 835's 5-minute interval,on average across all the days in the dataset, contains the maximum number of steps
@@ -69,14 +99,20 @@ The 835's 5-minute interval,on average across all the days in the dataset, conta
 ##Imputing missing values
 
 The number of NAs can be calculated by
-```{r}
+
+```r
 dataStep4<-dataStep$steps
 length(dataStep4[is.na(dataStep4)])
+```
+
+```
+## [1] 2304
 ```
 So there are 2304 NAs
 
 We use the mean for that 5-minute interval to fill the dataset,save it as dataStepNew
-```{r}
+
+```r
 dataStepNew<-dataStep
 for(i in 1:nrow(dataStepNew)){
         if (is.na(dataStepNew[i,1])){
@@ -86,16 +122,37 @@ for(i in 1:nrow(dataStepNew)){
 sum(is.na(dataStepNew$steps))
 ```
 
+```
+## [1] 0
+```
+
 Now we calculate the steps per day
-```{r}
+
+```r
 dataStepNew2<-split(dataStepNew,dataStepNew$date)
 dataStepDayNew<-1:61
 for (i in 1:61){
         dataStepDayNew[i]<-sum(dataStepNew2[[i]]$steps)
 }
 hist(dataStepDayNew,xlab="Number of Steps",col="red")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+
+```r
 mean(dataStepDayNew)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(dataStepDayNew)
+```
+
+```
+## [1] 10766.19
 ```
 
 As we can see, the frequency between 10000 and 15000 grows a lot
@@ -105,11 +162,13 @@ The median is 10766.19
 ##Are there differences in activity patterns between weekdays and weekends?
 
 First we add the weekday or weekend
-```{r}
-weekday <- c("ÐÇÆÚÒ»", "ÐÇÆÚ¶þ", "ÐÇÆÚÈý", "ÐÇÆÚËÄ", "ÐÇÆÚÎå")
+
+```r
+weekday <- c("æ˜ŸæœŸä¸€", "æ˜ŸæœŸäºŒ", "æ˜ŸæœŸä¸‰", "æ˜ŸæœŸå››", "æ˜ŸæœŸäº”")
 dataStepNew$day<-as.factor(ifelse(is.element(weekdays(as.Date(as.character(dataStepNew$date))),weekday), "Weekday","Weekend"))
 dataStepIntervalNew<- aggregate(steps~interval+day,dataStepNew, mean)
 library(lattice)
 xyplot(dataStepIntervalNew$steps~dataStepIntervalNew$interval|dataStepIntervalNew$day, layout=c(1,2), type="l")
 ```
-Forgive me that the language of my R software is Chinese, so the names of weekdays are in Chinese. "ÐÇÆÚÒ»" is Monday, "ÐÇÆÚ¶þ" is Tuesday, "ÐÇÆÚÈý" is Wednesday, "ÐÇÆÚËÄ" is Thursday, "ÐÇÆÚÎå" is Friday.
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
