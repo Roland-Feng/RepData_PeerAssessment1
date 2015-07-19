@@ -34,12 +34,13 @@ Then we plot the histogram
 hist(dataStepDay,xlab="Number of Steps",col="red")
 ```
 
-The mean and meidan is
+The mean and meidan is calculated by 
 ```{r}
 dataStepDay<-dataStepDay[!is.na(dataStepDay)]
 mean(dataStepDay)
 median(dataStepDay)
 ```
+and they are 10766.19 and 10765.
 
 ##What is average daily activity pattern?
 
