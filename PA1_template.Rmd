@@ -30,7 +30,7 @@ for (i in 1:61){
 }
 ```
 Then we plot the histogram
-```{r}
+```{r result="asis"}
 hist(dataStepDay,xlab="Number of Steps",col="red")
 ```
 
