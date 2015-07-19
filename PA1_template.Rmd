@@ -112,3 +112,4 @@ dataStepIntervalNew<- aggregate(steps~interval+day,dataStepNew, mean)
 library(lattice)
 xyplot(dataStepIntervalNew$steps~dataStepIntervalNew$interval|dataStepIntervalNew$day, layout=c(1,2), type="l")
 ```
+Forgive me that the language of my R software is Chinese, so the names of weekdays are in Chinese. "星期一" is Monday, "星期二" is Tuesday, "星期三" is Wednesday, "星期四" is Thursday, "星期五" is Friday.
